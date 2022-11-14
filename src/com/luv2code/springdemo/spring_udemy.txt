@@ -187,6 +187,45 @@ Injecting value from property file
                        <property name="emailAddress" value="${foo.email}"/>
                        <property name="team" value="${foo.team}"/>
                   </bean>
-                  
-                 duhjfj kjkj
-         
+
+      =========================
+Bean Scopes-
+    . Scope refers to the lifecycle of a bean
+    . How long does the bean live?
+    . How many instances are created?
+    . How is the bean shared?
+
+    Default Scope of bean is Singleton
+
+      What is a Singleton?
+         . Spring Container creates only one instance of the bean, by default
+         . It is cached in memory
+         . All request for teh bean will return a SHARED reference of the SAME bean
+
+      Explicitly Specify Bean Scope:
+            code:
+                <bean ...>
+                   <bean id="myCoach" class="com.luv2code.springdemo.TrackCoach"
+                         scope="singleton">
+                     .....
+                   </bean>
+                </bean>
+
+      Additional Spring Bean Scopes:
+              Scopes-:
+                    singleton: Create a single shared instance of the bean. Default scope.
+                    prototype: Creates a new bean instance for each container request.
+                    request: Scoped to an HTTP web request. Only used for web apps.
+                    session: Scoped to an HTTP web session. Only used for web apps.
+                    global-session: Scoped to a global HTTP web session. Only used for web apps.
+
+      Prototype Scope Example:
+           Prototype scope: new object for each request
+                      code:
+                         <beans ...>
+                             <bean id="myCoach"
+                                   class="com.luv2code.springdemo.TrackCoach"
+                                   scope="prototype">
+                               ...
+                             </bean>
+                         </beans>
