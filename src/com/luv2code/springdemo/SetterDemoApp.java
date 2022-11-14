@@ -24,4 +24,3 @@ public class SetterDemoApp {
 	}
 
 }
-kjdifijdkj
