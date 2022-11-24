@@ -187,6 +187,143 @@ Injecting value from property file
                        <property name="emailAddress" value="${foo.email}"/>
                        <property name="team" value="${foo.team}"/>
                   </bean>
-                  
-                 duhjfj kjkj
-         
+
+      =========================
+Bean Scopes-
+    . Scope refers to the lifecycle of a bean
+    . How long does the bean live?
+    . How many instances are created?
+    . How is the bean shared?
+
+    Default Scope of bean is Singleton
+
+      What is a Singleton?
+         . Spring Container creates only one instance of the bean, by default
+         . It is cached in memory
+         . All request for teh bean will return a SHARED reference of the SAME bean
+
+      Explicitly Specify Bean Scope:
+            code:
+                <bean ...>
+                   <bean id="myCoach" class="com.luv2code.springdemo.TrackCoach"
+                         scope="singleton">
+                     .....
+                   </bean>
+                </bean>
+
+      Additional Spring Bean Scopes:
+              Scopes-:
+                    singleton: Create a single shared instance of the bean. Default scope.
+                    prototype: Creates a new bean instance for each container request.
+                    request: Scoped to an HTTP web request. Only used for web apps.
+                    session: Scoped to an HTTP web session. Only used for web apps.
+                    global-session: Scoped to a global HTTP web session. Only used for web apps.
+
+      Prototype Scope Example:
+           Prototype scope: new object for each request
+                      code:
+                         <beans ...>
+                             <bean id="myCoach"
+                                   class="com.luv2code.springdemo.TrackCoach"
+                                   scope="prototype">
+                               ...
+                             </bean>
+                         </beans>
+
+ ========================================
+ Bean Lifecycle Methods:-
+    Bean lifecycle:-
+         Container started->Bean Instantiated->Dependencies Injected->Internal Spring Processing->Your Custom Init Method->Bean is Ready for use->Container Is ShutDown->Our custom destroy method->stop
+    We can add custom code during bean initialization:-
+           . Calling custom business logic methods
+           . Setting up handles to resources (db, sockets, file etc)
+    We can add custom code during bean destruction
+           . Calling custom business logic method
+           . Clean up handles to resources(db,sockets,files etc)
+
+    code during bean initialization or bean destruction is called Hook
+
+    Init: method configuration
+         code:
+              <beans...>
+                   <bean id="myCoach"
+                         class="com.luv2code.springdemo.TrackCoach"
+                         init-method="doMyStartupStuff">
+                         ...
+                         </bean>
+              </beans>
+    Destroy: method configuration
+         code:
+              <beans...>
+                   <bean id="myCoach"
+                         class="com.luv2code.springdemo.TrackCoach"
+                         init-method="doMyStartupStuff"
+                         destroy-method="doMyCleanupStuff">
+                         ....
+                   </bean>
+              </beans>
+
+    So overall Development process:
+         1. Define your methods for init and destroy in bean class
+         2. Configure the method names in Spring config file
+
+         Note:
+             Special Note: Defining init and destroy methods - Method Signatures
+             Special Note about init and destroy Method Signatures
+
+             When using XML configuration, I want to provide additional details regarding the method signatures of the init-method  and destroy-method .
+
+             Access modifier
+             The method can have any access modifier (public, protected, private)
+
+             Return type
+             The method can have any return type. However, "void' is most commonly used. If you give a return type just note that you will not be able to capture the return value. As a result, "void" is commonly used.
+
+             Method name
+             The method can have any method name.
+
+             Arguments
+             The method can not accept any arguments. The method should be no-arg.
+
+ =========================================================================================
+Section 7: Spring Configuration with Java Annotations - Inversion of Control
+-----
+What are Java Annotations?
+    . Special labels/markers added to Java classes
+    . Provide meta-data about the class
+    . Processed at compile time or run-time for special processing
+
+    Why Spring Configuration with Annotations?
+       . XML configuration can be verbose
+       . Configure your Spring beans with Annotations
+       . Annotations minimize the XML configuration
+
+    Scanning for Component Classes
+       . Spring will scan your Java classes for special annotations
+       . Automatically register the beans in Spring container
+
+    Development Process
+        1. Enable component scanning in Spring config file
+        2. Add the @Component Annotation to your Java classes
+        3. Retrieve bean from Spring container
+
+        Step1: Enable component scanning in Spring config file
+            code:
+                <beans ...>
+                    <context:component-scan base-package="com.luv2code.springdemo"/>
+                </beans>
+
+        Step2: Add the @Component Annotation to your Java classes
+            code:
+                @Component("thatSillyCoach")// thatSillyCoach is bean id
+                public class TennisCoach implements Coach{
+                    @Override
+                    public String getDailyWorkout(){
+                        return "Practice your backhand volley";
+                }
+                }
+
+        Step3: Retrieve bean from Spring Container
+           . Same coding as before...nothing changes
+              code:
+                   Coach theCoach=context.getBean("thatSillyCoach",Coach.class);
